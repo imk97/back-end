@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('user/{id}', 'UserController@show');
 Route::post('login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);
+Route::get('logout', 'Auth\LoginController@logout');
 Route::post('add', 'UserController@store');
 Route::post('reset', 'Auth\ResetPasswordController@reset');
 Route::get('detail', 'UserController@details');
