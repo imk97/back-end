@@ -9,14 +9,19 @@ use Illuminate\Support\Facades\Cache;
 
 class ModelIntervalController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     //ITEM
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $validate = $request->validate([
             'item' => 'required',
             'model_name' => 'required'
         ]);
 
-        if($validate) {
+        if ($validate) {
             DB::table('items')->insert($validate);
             return response()->json(['message' => 'Item stored!']);
         } else {
@@ -24,40 +29,44 @@ class ModelIntervalController extends Controller
         }
     }
 
-    public function items($model) {
-        return response()->json(['items' => DB::table('items')->where('model_name',$model)->get()]);
+    public function items($model)
+    {
+        return response()->json(['items' => DB::table('items')->where('model_name', $model)->get()]);
     }
 
-    public function delItems($id) {
+    public function delItems($id)
+    {
 
-        $del = DB::table('items')->where('id', $id )->delete();
-        if($del) {
+        $del = DB::table('items')->where('id', $id)->delete();
+        if ($del) {
             return response()->json(['message' => 'success']);
         }
-
     }
 
-    public function updateItem(Request $request) {
+    public function updateItem(Request $request)
+    {
         $update = DB::table('items')->where('id', $request->input('id'))->update(['item' => $request->input('item')]);
-        if($update == 1) {
+        if ($update == 1) {
             return response()->json(['message' => 'successful']);
         } else {
             return response()->json(['message' => 'unsuccessful']);
         }
     }
 
-    public function itemid($id) {
-        $item = DB::table('items')->where('id',$id)->get();
+    public function itemid($id)
+    {
+        $item = DB::table('items')->where('id', $id)->get();
         return response()->json(['item' => $item]);
     }
 
     //MODEL
 
-    public function save(Request $request) {
+    public function save(Request $request)
+    {
         $validate = $request->validate([
             'name' => 'required',
         ]);
-        if($validate) {
+        if ($validate) {
             DB::table('model')->insert($validate);
             return response()->json(['message' => 'Model saved']);
         } else {
@@ -65,35 +74,39 @@ class ModelIntervalController extends Controller
         }
     }
 
-    public function list() {
+    public function list()
+    {
         $modelCar = DB::table('model')->get();
         return response()->json(['model' => $modelCar]);
     }
 
-    public function updateModel(Request $request) {
+    public function updateModel(Request $request)
+    {
         $updatemodel = DB::table('model')->where('id', $request->input('id'))->update(['name' => $request->input('name')]);
-        if($updatemodel != 0) {
+        if ($updatemodel != 0) {
             return response()->json(['message' => 'successful']);
         } else {
             return response()->json(['message' => 'not succesful']);
         }
     }
 
-    public function deleteModel($id) {
-        $deleted = DB::table('model')->where('id',$id)->delete();
-        if($deleted != 0) {
+    public function deleteModel($id)
+    {
+        $deleted = DB::table('model')->where('id', $id)->delete();
+        if ($deleted != 0) {
             return response()->json(['message' => 'successful']);
         } else {
             return response()->json(['message' => 'not successful']);
         }
     }
 
-    
 
-    
-    
 
-    public function search(Request $request) {
+
+
+
+    public function search(Request $request)
+    {
 
         echo DB::table('book')->where('plateNum', $request->input('model_name'))->get('plateNum');
 
@@ -106,36 +119,35 @@ class ModelIntervalController extends Controller
         //echo $search;*/
     }
 
-    public function storecacheProcess(Request $request) {
-
-        $item = $request->input('item');
+    public function storecacheProcess(Request $request)
+    {
         $status = $request->input('status');
-        Cache::put('item', $item, 30);
-        Cache::put('status', $status, 30);
-        /*if($process == 'start') {
-            session(['process' => 'loading']);
-            return session()->all();
+        if ( $status == 'end' ) {
+            $item = $request->input('item');
+            $end[] = $item;
+            Cache::put('item', $end);
+            return response()->json([ 'message' => $end ]);
         } else {
-            session()->forget('process');
-            session()->put('process', 'stop');
-            //return session('process');
-        }*/
-    }
-
-    public function getcacheProcess(Request $request) {
-
-        if(Cache::has('item') && Cache::has('status')) {
-            $item = Cache::pull('item');
-            $status = Cache::pull('status');
-            return response()->json(['item' => $item, 'status' => $status]);
-        } 
-    }
-
-    public function deletecacheProcess() {
-        if(Cache::has('item')) {
-            $delete = Cache::forget('item');
-            return response()->json(['item' => 'delete']);
+            $boolean = false;
+            Cache::put('bool', $boolean);
+            return response()->json(['message' => $boolean]);
         }
     }
 
+    public function getcacheProcess(Request $request)
+    {
+        if ( Cache::has('item') && Cache::get('bool') == false) {
+            $item = Cache::pull('item');
+            $boolean = true;
+            return response()->json([ 'item' => $item , 'message' => true ]);
+        } else {
+            $boolean = Cache::pull('bool');
+            return response()->json([ 'message' => $boolean ]);
+        }
+    }
+
+    public function deletecacheProcess()
+    {
+        Cache::flush();
+    }
 }

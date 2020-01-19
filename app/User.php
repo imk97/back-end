@@ -34,4 +34,8 @@ class User extends Authenticatable
     {
         $this->notify(new PasswordResetNotification($token));
     }
+
+    public function AauthAccessToken() {
+        return $this->hasMany('\App\OauthAccessToken');
+    }
 }

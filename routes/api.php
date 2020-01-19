@@ -20,7 +20,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('user/{id}', 'UserController@show');
 Route::post('login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);
-Route::post('logout', 'Auth\LoginController@logout');
 Route::post('add', 'UserController@store');
 Route::post('reset', 'Auth\ResetPasswordController@reset');
 Route::get('detail', 'UserController@details');
@@ -37,6 +36,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('user/{id}', 'UserController@update');
     Route::delete('user/{id}', 'UserController@destroy');
     Route::put('/password', 'UserController@change');
+    Route::get('logout', 'Auth\LoginController@logout');
 
     Route::post('book', 'BookController@store');
     Route::get('books', 'BookController@index');

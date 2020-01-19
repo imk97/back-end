@@ -82,6 +82,8 @@ class LoginController extends Controller
     }
 
     public function logout() {
-        Auth::logout();
+        if(Auth::check()) {
+            Auth::user()->AauthAccessToken()->delete();
+        }
     }
 }
