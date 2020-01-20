@@ -124,7 +124,7 @@ class ModelIntervalController extends Controller
         $status = $request->input('status');
         if ( $status == 'end' ) {
             $item = $request->input('item');
-            $end[] = $item;
+            $end[] = explode(",",$item);
             Cache::put('item', $end);
             return response()->json([ 'message' => $end ]);
         } else {
