@@ -38,25 +38,23 @@ class BookController extends Controller
             'model_name' => 'required',
             'model_interval' => 'required',
         ]);
-
-        //$validate['item'] = DB::table('items')->select('id')->where('item', $request->input('item')->get());
         $validate['plateNum'] = strtoupper($validate['plateNum']);
         $validate['date'] = substr($validate['date'], 0, 10);
         $validate['time'] = substr($validate['time'], 0, 4);
+        $plateNumber = DB::table('book')->select('plateNum')->where([['plateNum', $validate['plateNum']], ['date', $validate['date']] ])->value('plateNum');
         if ($validate) {
-            $stored = DB::table('book')->insert($validate);
-            if ($stored == 1) {
-                return response()->json(['message' => 'Appointment successfully saved'], 201);
+            if ($validate['plateNum'] == $plateNumber) {
+                return response()->json(['message' => 'Plate Number is duplicated']);
             } else {
-                return response()->json(['message' => 'Appointment can not be made'], 500);
+                $stored = DB::table('book')->insert($validate);
+                if ($stored == 1) {
+                    return response()->json(['message' => 'Appointment successfully saved']);
+                } else {
+                    return response()->json(['message' => 'Appointment can not be made']);
+                }
             }
         } else {
-            $plateNumber = DB::table('book')->select('plateNum')->where('plateNum', $validate['plateNum'])->get();
-            if ($validate['plateNum'] == $plateNumber) {
-                return response()->json(['message' => 'Plate Number is duplicated'], 500);
-            } else {
-                return response()->json(['message' => 'Invalid format'], 400);
-            }
+            return response()->json(['message' => 'Invalid format'], 400);
         }
     }
 

@@ -137,11 +137,11 @@ class ModelIntervalController extends Controller
     public function getcacheProcess(Request $request)
     {
         if ( Cache::has('item') && Cache::get('bool') == false) {
-            $item = Cache::pull('item');
+            $item = Cache::get('item');
             $boolean = true;
             return response()->json([ 'item' => $item , 'message' => true ]);
         } else {
-            $boolean = Cache::pull('bool');
+            $boolean = Cache::get('bool');
             return response()->json([ 'message' => $boolean ]);
         }
     }
@@ -149,5 +149,6 @@ class ModelIntervalController extends Controller
     public function deletecacheProcess()
     {
         Cache::flush();
+        return response()->json(['message' => 'Deleted']);
     }
 }
