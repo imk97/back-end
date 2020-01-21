@@ -36,7 +36,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('user/{id}', 'UserController@update');
     Route::delete('user/{id}', 'UserController@destroy');
     Route::put('/password', 'UserController@change');
-    Route::post('logout', 'Auth\LoginController@logout');
+    Route::get('logout', 'Auth\LoginController@logout');
 
     Route::post('book', 'BookController@store');
     Route::get('books', 'BookController@index');
