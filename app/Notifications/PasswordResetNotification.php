@@ -45,7 +45,7 @@ class PasswordResetNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $urlToResetform = "http://localhost:8000/api/password/form";
+        $urlToResetform = "http://157.230.38.195/back-end/api/password/form";
         return (new MailMessage)
         ->subject(Lang::getFromJson('Reset Password Notification'))
         ->line(Lang::getFromJson('You are receiving this email because we received a password reset request for your account.'))
