@@ -111,13 +111,13 @@ class BookController extends Controller
         }
     }
 
-    public function delete($plateNum)
+    public function delete($id)
     {
-        $deleted = DB::table('book')->where('plateNum', $plateNum)->delete();
+        $deleted = DB::table('book')->where('id', $id)->delete();
         if (!$deleted) {
-            return response()->json("No data found", 401);
+            return response()->json("No data found");
         } else {
-            return response()->json(["message" => "deleted"], 200);
+            return response()->json(["message" => "deleted"]);
         }
     }
 
